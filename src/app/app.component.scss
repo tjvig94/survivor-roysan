@@ -5,7 +5,11 @@
 main {
     background-color: $roysan-blue;
     height: 100%;
+    width: 100%;
     display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
     margin: 0;
 }
 
