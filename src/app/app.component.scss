@@ -1,0 +1,14 @@
+@import '../colors.scss';
+@import '../fonts.scss';
+
+main {
+    background-color: $roysan-blue;
+    height: 100%;
+}
+
+.construction {
+    text-align: center;
+    font-size: $banner-lg;
+    font-family: $francois-one;
+    color: white;
+}
