@@ -5,6 +5,12 @@
 main {
     background-color: $roysan-blue;
     height: 100%;
+    display: flex;
+    margin: 0;
+}
+
+.gutter {
+    width: $banner-lg;
 }
 
 .construction {
@@ -12,7 +18,7 @@ main {
     font-size: $banner-lg;
     font-family: $francois-one;
     color: white;
-    padding: $banner-lg;
+    margin-top: $banner-lg;
 
     @media (max-width: $tablet) {
         font-size: $banner-sm;
