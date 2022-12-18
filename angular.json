@@ -97,6 +97,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "survivor-roysan:build:production",
+            "firebaseProject": "survivor-roysan",
+            "firebaseHostingSite": "roysanreality"
+          }
         }
       }
     }

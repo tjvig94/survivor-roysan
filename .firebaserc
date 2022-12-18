@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "survivor-roysan": {
+      "hosting": {
+        "survivor-roysan": [
+          "roysanreality"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "survivor-roysan"
+  }
+}
