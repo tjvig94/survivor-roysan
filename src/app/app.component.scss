@@ -1,5 +1,6 @@
-@import '../colors.scss';
-@import '../fonts.scss';
+@import '../styles/colors.scss';
+@import '../styles/fonts.scss';
+@import '../styles/breakpoints.scss';
 
 main {
     background-color: $roysan-blue;
@@ -11,4 +12,13 @@ main {
     font-size: $banner-lg;
     font-family: $francois-one;
     color: white;
+    padding: $banner-lg;
+
+    @media (max-width: $tablet) {
+        font-size: $banner-sm;
+    }
+
+    @media (max-width: $mobile) {
+        font-size: $header-3;
+    }
 }

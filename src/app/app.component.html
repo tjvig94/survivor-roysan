@@ -1,3 +1,8 @@
 <main>
-  <h1 class="construction">Under construction. See you soon!</h1>
+  <div *ngIf="underConstruction" class="construction">
+    <h1>Under construction. See you soon!</h1>
+  </div>
+  <div *ngIf="!underConstruction">
+    
+  </div>
 </main>
