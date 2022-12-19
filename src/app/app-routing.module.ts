@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ConstructionComponent } from './construction/construction.component';
-import { WatchPageComponent } from './watch-page/watch-page.component';
+import { ConstructionComponent } from './pages/construction/construction.component';
+import { WatchPageComponent } from './pages/watch-page/watch-page.component';
 
 const routes: Routes = [
   { path: 'construction', component: ConstructionComponent },
