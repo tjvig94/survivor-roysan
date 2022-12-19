@@ -11,10 +11,14 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { providePerformance,getPerformance } from '@angular/fire/performance';
 import { provideRemoteConfig,getRemoteConfig } from '@angular/fire/remote-config';
 import { provideStorage,getStorage } from '@angular/fire/storage';
+import { WatchPageComponent } from './watch-page/watch-page.component';
+import { ConstructionComponent } from './construction/construction.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    WatchPageComponent,
+    ConstructionComponent
   ],
   imports: [
     BrowserModule,
