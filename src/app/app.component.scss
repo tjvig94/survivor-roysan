@@ -18,11 +18,11 @@ main {
 }
 
 .logo {
-    img {
-        clip-path: inset(0 45% 0 0);
+    width: 300px;
+    margin: 0 auto  $banner-lg auto;
+    @media (max-width: $mobile) {
+        width: 150px;
     }
-    margin-left: 32%;
-    
 }
 
 .construction {
