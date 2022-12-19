@@ -1,0 +1,27 @@
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/breakpoints.scss';
+
+.logo {
+    width: 300px;
+    margin: 0 auto  $banner-lg auto;
+    @media (max-width: $mobile) {
+        width: 150px;
+    }
+}
+
+.construction {
+    text-align: center;
+    font-size: $banner-lg;
+    font-family: $francois-one;
+    color: white;
+    margin-top: $banner-lg;
+
+    @media (max-width: $tablet) {
+        font-size: $banner-sm;
+    }
+
+    @media (max-width: $mobile) {
+        font-size: $header-3;
+    }
+}

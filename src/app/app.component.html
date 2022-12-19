@@ -1,14 +1,5 @@
 <main>
   <div class="gutter"></div>
-  <div *ngIf="underConstruction" class="construction">
-    <div class="logo" >
-      <img src="../assets/roysan-logo-color.svg" alt="Survivor Roysan Logo">
-    </div>
-    
-    <h1>Under construction. See you soon!</h1>
-  </div>
-  <div *ngIf="!underConstruction">
-    <router-outlet></router-outlet>
-  </div>
+  <router-outlet></router-outlet>
   <div class="gutter"></div>
 </main>
