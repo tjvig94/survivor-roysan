@@ -17,6 +17,14 @@ main {
     width: $banner-lg;
 }
 
+.logo {
+    img {
+        clip-path: inset(0 45% 0 0);
+    }
+    margin-left: 32%;
+    
+}
+
 .construction {
     text-align: center;
     font-size: $banner-lg;
