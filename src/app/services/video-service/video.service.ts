@@ -3,7 +3,6 @@ import env from '../../../../env';
 import axios from '../axios/axios';
 import { from, map, Observable, tap } from 'rxjs';
 import { AxiosResponse } from 'axios';
-import { Playlist } from 'src/app/definitions/playlist-data.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,7 @@ export class VideoService {
   }
 
   fetchPlaylistItemsFromYT(id: string): Observable<AxiosResponse> {
-    const URL = `${env.playlistItemsURL}key=${env.apiKey}&part=snippet&playlistId=${id}`
+    const URL = `${env.playlistItemsURL}key=${env.apiKey}&part=snippet&playlistId=${id}&maxResults=20`
     return from(axios.get(URL));
   }
   

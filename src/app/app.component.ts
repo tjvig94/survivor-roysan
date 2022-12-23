@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Playlist, Video } from './definitions/playlist-data.interface';
 import { VideoService } from './services/video-service/video.service';
 
@@ -19,20 +19,23 @@ export class AppComponent {
     private router: Router,
     private videoService: VideoService,
   ) {
-    this.assemblePlaylistData().subscribe((playlists) => {
-      this.playlists = playlists;
+    
+    // initialize playlist data
+    this.fetchPlaylistData().subscribe((playlists) => {
+      this.playlists = playlists; 
     });
+
+    // redirect depending on feature flag
     if (this.underConstruction) {
       this.router.navigate(['/construction']);
-      
     } else {
       this.router.navigate(['/watch'])
     };
   }
 
-  assemblePlaylistData(): Observable<Playlist[]> {
+  fetchPlaylistData(): Observable<Playlist[]> {
     return this.videoService.fetchPlaylistsFromYT().pipe(
-      map(({ data }) => this.mapPlaylistData(data))
+      map(({ data }) => this.mapPlaylistData(data)),
     )
   }
 
@@ -47,18 +50,18 @@ export class AppComponent {
     })
   }
 
-  // async assemblePlaylistItems(playlists: PlaylistData[]): Playlists {
+  fetchPlaylistItems(id: string): Observable<Video[]> {
+      return this.videoService.fetchPlaylistItemsFromYT(id).pipe(
+        map(({ data }) => this.mapPlaylistItemData(data.id)),
+      )
+  }
 
-  //   let videoData: Playlists = {
-  //     playlists: []
-  //   };
-
-  //   playlists.forEach(async pl => {
-  //     const playlistItems = await this.videoService.fetchPlaylistItemsFromYT(pl.id);
-  //     const trimmedData: Playlists = {
-
-  //     }
-  //   })
-  // }
-
+  mapPlaylistItemData(data: any): Video[] {
+    return data.items.map((video: any) => {
+      return {
+        videoId: video.id,
+        thumbnail: video.snippet.thumbnails.standard,
+      }
+    })
+  }
 }
