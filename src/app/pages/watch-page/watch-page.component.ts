@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { tap, Observable, map } from 'rxjs';
+import { tap, Observable, map, of } from 'rxjs';
 import { Playlist, Video } from 'src/app/definitions/playlist-data.interface';
 import { VideoService } from 'src/app/services/video-service/video.service';
 
@@ -12,6 +12,7 @@ export class WatchPageComponent {
 
   playlists: Playlist[] = [];
   videos: Video[] = [];
+  videos$: Observable<Video[]> = of([]);
 
   constructor(
     private videoService: VideoService
@@ -25,7 +26,7 @@ export class WatchPageComponent {
 
   fetchPlaylistData(): Observable<Playlist[]> {
     return this.videoService.fetchPlaylistsFromYT().pipe(
-      map(({ data }) => this.mapPlaylistData(data)),
+      map(({ data }) => this.mapPlaylistData(data))
     )
   }
 
@@ -41,14 +42,18 @@ export class WatchPageComponent {
   }
 
   fetchPlaylistItems(id: string): Observable<Video[]> {
-      return this.videoService.fetchPlaylistItemsFromYT(id).pipe(
+      this.videos$ = this.videoService.fetchPlaylistItemsFromYT(id).pipe(
         map(response => this.mapPlaylistItemData(response)),
+        tap((videos: Video[]) => this.videos = videos),
       )
+      return this.videos$;
   }
 
   mapPlaylistItemData(response: any): Video[] {
     return response.data.items.map((video: any) => {
       return {
+        title: video.snippet.title,
+        description: video.snippet.description,
         videoId: video.id,
         thumbnail: video.snippet.thumbnails.standard,
       }

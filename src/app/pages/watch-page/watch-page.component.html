@@ -1,1 +1,4 @@
-
+<button type="button" (click)="fetchPlaylistItems(this.playlists[0].id).subscribe()">Season 1</button>
+<ul *ngIf="videos$ | async as videos">
+    <li *ngFor="let video of videos">{{video.title}}</li>
+</ul>
