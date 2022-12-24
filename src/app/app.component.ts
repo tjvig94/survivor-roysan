@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, mergeMap, Observable, tap } from 'rxjs';
-import { Playlist, Video } from './definitions/playlist-data.interface';
-import { VideoService } from './services/video-service/video.service';
 
 @Component({
   selector: 'app-root',
