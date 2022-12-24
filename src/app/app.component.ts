@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { map, mergeMap, Observable, tap } from 'rxjs';
 import { Playlist, Video } from './definitions/playlist-data.interface';
 import { VideoService } from './services/video-service/video.service';
 
@@ -14,6 +14,7 @@ export class AppComponent {
   // feature toggle - set to true before pushing changes!
   underConstruction: boolean = true;
   playlists: Playlist[] = [];
+  videos: Video[] = []
 
   constructor(
     private router: Router,
@@ -21,9 +22,9 @@ export class AppComponent {
   ) {
     
     // initialize playlist data
-    this.fetchPlaylistData().subscribe((playlists) => {
-      this.playlists = playlists; 
-    });
+    this.fetchPlaylistData().pipe(
+      tap((playlists) => this.playlists = playlists),
+    ).subscribe();
 
     // redirect depending on feature flag
     if (this.underConstruction) {
@@ -52,12 +53,12 @@ export class AppComponent {
 
   fetchPlaylistItems(id: string): Observable<Video[]> {
       return this.videoService.fetchPlaylistItemsFromYT(id).pipe(
-        map(({ data }) => this.mapPlaylistItemData(data.id)),
+        map(response => this.mapPlaylistItemData(response)),
       )
   }
 
-  mapPlaylistItemData(data: any): Video[] {
-    return data.items.map((video: any) => {
+  mapPlaylistItemData(response: any): Video[] {
+    return response.data.items.map((video: any) => {
       return {
         videoId: video.id,
         thumbnail: video.snippet.thumbnails.standard,
