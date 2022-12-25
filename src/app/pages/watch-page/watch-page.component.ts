@@ -11,23 +11,22 @@ import { VideoService } from 'src/app/services/video-service/video.service';
 export class WatchPageComponent {
 
   playlists: Playlist[] = [];
+  playlists$: Observable<Playlist[]> = of([])
+
   videos: Video[] = [];
   videos$: Observable<Video[]> = of([]);
 
   constructor(
     private videoService: VideoService
   ) {
-
-    // initialize playlist data
-    this.fetchPlaylistData().pipe(
-      tap((playlists) => this.playlists = playlists),
-    ).subscribe();
+    this.fetchPlaylistData();
   }
 
-  fetchPlaylistData(): Observable<Playlist[]> {
-    return this.videoService.fetchPlaylistsFromYT().pipe(
-      map(({ data }) => this.mapPlaylistData(data))
-    )
+  fetchPlaylistData(): void {
+    this.playlists$ = this.videoService.fetchPlaylistsFromYT().pipe(
+      map(({ data }) => this.mapPlaylistData(data)),
+      tap((playlists: Playlist[]) => this.playlists = playlists),
+    );
   }
 
   mapPlaylistData(data: any): Playlist[] {
@@ -41,12 +40,11 @@ export class WatchPageComponent {
     })
   }
 
-  fetchPlaylistItems(id: string): Observable<Video[]> {
+  fetchPlaylistItems(id: string): void {
       this.videos$ = this.videoService.fetchPlaylistItemsFromYT(id).pipe(
         map(response => this.mapPlaylistItemData(response)),
         tap((videos: Video[]) => this.videos = videos),
       )
-      return this.videos$;
   }
 
   mapPlaylistItemData(response: any): Video[] {

@@ -1,4 +1,9 @@
-<button type="button" (click)="fetchPlaylistItems(this.playlists[0].id).subscribe()">Season 1</button>
-<ul *ngIf="videos$ | async as videos">
-    <li *ngFor="let video of videos">{{video.title}}</li>
-</ul>
+<mat-form-field *ngIf="playlists$ | async as seasons" class="season-select">
+    <mat-label>Seasons</mat-label>
+    <mat-select>
+        <mat-option *ngFor="let season of seasons" [value]="season.id" (click)="fetchPlaylistItems(season.id)">{{season.title}}</mat-option>
+    </mat-select>
+</mat-form-field>
+<div *ngIf="videos$ | async as episodes">
+    <img *ngFor="let episode of episodes" [src]="episode.thumbnail.url">
+</div>
