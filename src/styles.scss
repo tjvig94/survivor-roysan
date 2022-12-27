@@ -38,9 +38,10 @@ $survivor-roysan-theme: mat.define-light-theme((
 @import './styles/fonts.scss';
 
 html, body {
-	height: 100%;
-	width: 100%;
+	background-color: $roysan-blue;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 1rem 16.5% 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

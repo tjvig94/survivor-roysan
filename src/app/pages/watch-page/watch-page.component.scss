@@ -1,6 +1,19 @@
-.season-select {
-    width: 400px;
-    mat-select {
-        width: 100%;
+.watch-page {
+    margin: auto;
+    .season-select {
+        display: block;
+        width: 400px;
+        mat-select {
+            width: 100%;
+        }
+    }
+    
+    .episodes {
+        grid-auto-rows: auto;
+    }
+    
+    .player-container {
+        margin-bottom: 1rem;
     }
 }
+

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { tap, Observable, map, of } from 'rxjs';
-import { Playlist, Video } from 'src/app/definitions/playlist-data.interface';
+import { Season, Episode } from 'src/app/definitions/playlist-data.interface';
 import { VideoService } from 'src/app/services/video-service/video.service';
 
 @Component({
@@ -10,26 +10,25 @@ import { VideoService } from 'src/app/services/video-service/video.service';
 })
 export class WatchPageComponent {
 
-  playlists: Playlist[] = [];
-  playlists$: Observable<Playlist[]> = of([])
-
-  videos: Video[] = [];
-  videos$: Observable<Video[]> = of([]);
+  seasons$: Observable<Season[]> = of([]);
+  episodes$: Observable<Episode[]> = of([]);
+  episodes: Episode[] = [];
+  currentEpisode$: Observable<Episode | undefined> = of(undefined);
 
   constructor(
-    private videoService: VideoService
+    private videoService: VideoService,
   ) {
-    this.fetchPlaylistData();
+    this.fetchSeriesData();
   }
 
-  fetchPlaylistData(): void {
-    this.playlists$ = this.videoService.fetchPlaylistsFromYT().pipe(
-      map(({ data }) => this.mapPlaylistData(data)),
-      tap((playlists: Playlist[]) => this.playlists = playlists),
+  fetchSeriesData(): void {
+    this.seasons$ = this.videoService.fetchPlaylistsFromYT().pipe(
+      map(({ data }) => this.mapSeasonData(data)),
+      tap((seasons) => seasons.pop()),
     );
   }
 
-  mapPlaylistData(data: any): Playlist[] {
+  mapSeasonData(data: any): Season[] {
     return data.items.map((i: any) => {
       return {
         id: i.id,
@@ -40,22 +39,44 @@ export class WatchPageComponent {
     })
   }
 
-  fetchPlaylistItems(id: string): void {
-      this.videos$ = this.videoService.fetchPlaylistItemsFromYT(id).pipe(
-        map(response => this.mapPlaylistItemData(response)),
-        tap((videos: Video[]) => this.videos = videos),
+  fetchEpisodeData(id: string): void {
+      this.episodes$ = this.videoService.fetchPlaylistItemsFromYT(id).pipe(
+        map(response => this.mapEpisodeData(response)),
+        tap((episodes) => this.episodes = episodes)
       )
   }
 
-  mapPlaylistItemData(response: any): Video[] {
+  mapEpisodeData(response: any): Episode[] {
     return response.data.items.map((video: any) => {
       return {
         title: video.snippet.title,
         description: video.snippet.description,
-        videoId: video.id,
+        videoId: video.snippet.resourceId.videoId,
         thumbnail: video.snippet.thumbnails.standard,
       }
     })
   }
+
+  fetchEpisodeToWatch(videoId: string): void {
+    this.currentEpisode$ = of(this.episodes.find(e => e.videoId === videoId)).pipe(
+      map(episode => {
+        if (episode) {
+          episode.videoId = `https://youtube.com/embed/${videoId}`
+        };
+        return episode;
+      }),
+    )
+  }
+
+  // mapCurrentEpisodeData(response: AxiosResponse): CurrentEpisode {
+  //   const data = response.data.items[0].snippet;
+  //   const player = response.data.items[0].player;
+  //   return {
+  //     title: data.title,
+  //     description: data.description,
+  //     player: player.embedHtml,
+  //     thumbnail: data.thumbnails.standard,
+  //   }
+  // }
 
 }

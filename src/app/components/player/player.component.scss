@@ -1,0 +1,11 @@
+.player {
+    height:576px;
+    width:1024px;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    .player-logo {
+        width: 25%;
+        filter: invert(1);
+    }
+}

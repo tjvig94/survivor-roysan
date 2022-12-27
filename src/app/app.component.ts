@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class AppComponent {
 
   // feature toggle - set to true before pushing changes!
-  underConstruction: boolean = true;
+  underConstruction: boolean = false;
 
   constructor(
     private router: Router,

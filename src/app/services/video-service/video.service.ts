@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import env from '../../../../env';
 import axios from '../axios/axios';
-import { from, map, Observable, tap } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { AxiosResponse } from 'axios';
 
 @Injectable({
@@ -18,5 +18,9 @@ export class VideoService {
     const URL = `${env.playlistItemsURL}key=${env.apiKey}&part=snippet&playlistId=${id}&maxResults=20`
     return from(axios.get(URL));
   }
-  
+
+  fetchEpisodeFromYT(id: string): Observable<AxiosResponse> {
+    const URL = `${env.videoURL}key=${env.apiKey}&part=snippet,player&id=${id}`;
+    return from(axios.get(URL));
+  }  
 }

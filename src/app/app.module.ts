@@ -16,18 +16,24 @@ import { WatchPageComponent } from './pages/watch-page/watch-page.component';
 import { ConstructionComponent } from './pages/construction/construction.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
+import { EpisodeComponent } from './components/episode/episode.component';
+import { YouTubePlayerModule } from '@angular/youtube-player';
+import { PlayerComponent } from './components/player/player.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WatchPageComponent,
-    ConstructionComponent
+    ConstructionComponent,
+    EpisodeComponent,
+    PlayerComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     MatSelectModule,
+    YouTubePlayerModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),
