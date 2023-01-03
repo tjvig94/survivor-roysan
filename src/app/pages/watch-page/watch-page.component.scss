@@ -1,15 +1,22 @@
 .watch-page {
-    margin: auto;
-    .season-select {
-        display: block;
-        width: 400px;
-        mat-select {
-            width: 100%;
-        }
+    .player-container {
+        display: flex;
+        justify-content: center;
     }
     
+    .season-select {
+        display: flex;
+        justify-content: space-around;
+        mat-form-field {
+            width: 300px;
+        }
+    }
+
     .episodes {
-        grid-auto-rows: auto;
+        margin: auto;
+        .episode-grid-container {
+            grid-auto-rows: auto;
+        }
     }
     
     .player-container {

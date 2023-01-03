@@ -2,20 +2,26 @@
     <div class="player-container">
         <player></player>
     </div>
+
+    <div *ngIf="seasons$ | async as seasons" class="season-select">
+        <mat-form-field>
+            <mat-label>Seasons</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let season of seasons" [value]="season.id" (click)="fetchEpisodeData(season.id)">{{season.title}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
     
-    <mat-form-field *ngIf="seasons$ | async as seasons" class="season-select">
-        <mat-label>Seasons</mat-label>
-        <mat-select>
-            <mat-option *ngFor="let season of seasons" [value]="season.id" (click)="fetchEpisodeData(season.id)">{{season.title}}</mat-option>
-        </mat-select>
-    </mat-form-field>
     
     <div *ngIf="episodes$ | async as episodes" class="episodes">
-        <episode
-            *ngFor="let episode of episodes"
-            [thumbnail]="episode.thumbnail.url"
-            [alt]="episode.title"
-            (click)="fetchEpisodeToWatch(episode.videoId)">
-        </episode>
+        <div class="episode-grid-container">
+            <episode
+                *ngFor="let episode of episodes"
+                [thumbnail]="episode.thumbnail.url"
+                [attr.alt]="episode.title"
+                (click)="fetchEpisodeToWatch(episode.videoId)">
+            </episode>
+        </div>
+        
     </div>
 </div>

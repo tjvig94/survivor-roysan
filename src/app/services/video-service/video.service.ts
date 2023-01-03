@@ -9,13 +9,15 @@ import { AxiosResponse } from 'axios';
 })
 export class VideoService {
 
+  playlistItemsMax: number = 20;
+
   fetchPlaylistsFromYT(): Observable<AxiosResponse> {
     const URL = `${env.playlistsURL}key=${env.apiKey}&channelId=${env.channelId}&part=snippet`;
     return from(axios.get(URL));
   }
 
   fetchPlaylistItemsFromYT(id: string): Observable<AxiosResponse> {
-    const URL = `${env.playlistItemsURL}key=${env.apiKey}&part=snippet&playlistId=${id}&maxResults=20`
+    const URL = `${env.playlistItemsURL}key=${env.apiKey}&part=snippet&playlistId=${id}&maxResults=${this.playlistItemsMax}`
     return from(axios.get(URL));
   }
 
