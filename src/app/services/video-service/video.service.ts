@@ -24,5 +24,5 @@ export class VideoService {
   fetchEpisodeFromYT(id: string): Observable<AxiosResponse> {
     const URL = `${env.videoURL}key=${env.apiKey}&part=snippet,player&id=${id}`;
     return from(axios.get(URL));
-  }  
+  }
 }

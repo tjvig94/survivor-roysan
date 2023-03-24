@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { tap, Observable, map, of } from 'rxjs';
 import { Season, Episode } from 'src/app/definitions/playlist-data.interface';
 import { VideoService } from 'src/app/services/video-service/video.service';
@@ -8,17 +8,31 @@ import { VideoService } from 'src/app/services/video-service/video.service';
   templateUrl: './watch-page.component.html',
   styleUrls: ['./watch-page.component.scss']
 })
-export class WatchPageComponent {
+export class WatchPageComponent implements OnInit {
 
   seasons$: Observable<Season[]> = of([]);
   episodes$: Observable<Episode[]> = of([]);
   episodes: Episode[] = [];
-  currentEpisode$: Observable<Episode | undefined> = of(undefined);
+  currentEpisode$: Observable<string> = of('');
+  currentEpisode: string = '';
+  apiLoaded: boolean = false;
 
   constructor(
     private videoService: VideoService,
   ) {
     this.fetchSeriesData();
+  }
+
+  ngOnInit() {
+    this.currentEpisode$.subscribe((val) => {
+      this.currentEpisode = ''
+    })
+    if (!this.apiLoaded) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.body.appendChild(tag);
+      this.apiLoaded = true;
+    }
   }
 
   fetchSeriesData(): void {
@@ -58,14 +72,11 @@ export class WatchPageComponent {
   }
 
   fetchEpisodeToWatch(videoId: string): void {
-    this.currentEpisode$ = of(this.episodes.find(e => e.videoId === videoId)).pipe(
-      map(episode => {
-        if (episode) {
-          episode.videoId = `https://youtube.com/embed/${videoId}`
-        };
-        return episode;
-      }),
-    )
+    const episode = this.episodes.find(e => e.videoId === videoId);
+    if (episode) {
+      this.currentEpisode$ = of(episode.videoId);
+      this.currentEpisode = episode.videoId;
+    }
   }
 
   // mapCurrentEpisodeData(response: AxiosResponse): CurrentEpisode {
