@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { ConstructionComponent } from './pages/construction/construction.component';
 import { WatchPageComponent } from './pages/watch-page/watch-page.component';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, OnInit, signal, Signal, WritableSignal } from '@angular/core';
 import { tap, Observable, map, of } from 'rxjs';
 import { Season, Episode } from 'src/app/definitions/playlist-data.interface';
 import { VideoService } from 'src/app/services/video-service/video.service';
@@ -10,20 +10,20 @@ import { VideoService } from 'src/app/services/video-service/video.service';
 })
 export class WatchPageComponent implements OnInit {
 
-  seasons$: Observable<Season[]> = of([]);
-  episodes$: Observable<Episode[]> = of([]);
+  seasons$: Observable<Season[]>;
+  seasons: WritableSignal<Season[]> = signal([]);
+  episodes$: Observable<Episode[]>;
   episodes: Episode[] = [];
   currentEpisode$: Observable<string> = of('');
-  currentEpisode: string = '';
+  currentEpisode: string;
   apiLoaded: boolean = false;
 
   constructor(
     private videoService: VideoService,
-  ) {
-    this.fetchSeriesData();
-  }
+  ) {}
 
   ngOnInit() {
+    this.fetchSeriesData();
     this.currentEpisode$.subscribe((val) => {
       this.currentEpisode = ''
     })
@@ -35,10 +35,18 @@ export class WatchPageComponent implements OnInit {
     }
   }
 
-  fetchSeriesData(): void {
+  fetchSeriesData() {
     this.seasons$ = this.videoService.fetchPlaylistsFromYT().pipe(
       map(({ data }) => this.mapSeasonData(data)),
-      tap((seasons) => seasons.pop()),
+      tap((seasons) => {
+        return seasons.pop();
+      }),
+    // return this.videoService.fetchPlaylistsFromYT().pipe(
+    //   map(({ data }) => this.mapSeasonData(data)),
+    //   tap((seasons) => {
+    //     seasons.pop();
+    //     this.seasons.set(seasons);
+    //   }),
     );
   }
 
