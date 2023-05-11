@@ -1,6 +1,6 @@
 <div class="watch-page">
     <div class="player-container">
-        <player *ngIf="!currentEpisode"></player>
+        <player *ngIf="!currentEpisode$"></player>
         <youtube-player *ngIf="currentEpisode$ | async as currentEpisode" [videoId]="currentEpisode" [width]=1024 [height]=576></youtube-player>
     </div>
 
@@ -20,7 +20,7 @@
                 *ngFor="let episode of episodes"
                 [thumbnail]="episode.thumbnail.url"
                 [alt]="episode.title"
-                (click)="fetchEpisodeToWatch(episode.videoId)">
+                (click)="setCurrentEpisode(episode.videoId)">
             </episode>
         </div>
         

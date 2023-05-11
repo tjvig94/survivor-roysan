@@ -1,5 +1,5 @@
 import { Component, NO_ERRORS_SCHEMA, OnInit, signal, Signal, WritableSignal } from '@angular/core';
-import { tap, Observable, map, of } from 'rxjs';
+import { tap, Observable, map, of, catchError, throwError } from 'rxjs';
 import { Season, Episode } from 'src/app/definitions/playlist-data.interface';
 import { VideoService } from 'src/app/services/video-service/video.service';
 
@@ -11,11 +11,8 @@ import { VideoService } from 'src/app/services/video-service/video.service';
 export class WatchPageComponent implements OnInit {
 
   seasons$: Observable<Season[]>;
-  seasons: WritableSignal<Season[]> = signal([]);
   episodes$: Observable<Episode[]>;
-  episodes: Episode[] = [];
-  currentEpisode$: Observable<string> = of('');
-  currentEpisode: string;
+  currentEpisode$: Observable<string>;
   apiLoaded: boolean = false;
 
   constructor(
@@ -24,9 +21,6 @@ export class WatchPageComponent implements OnInit {
 
   ngOnInit() {
     this.fetchSeriesData();
-    this.currentEpisode$.subscribe((val) => {
-      this.currentEpisode = ''
-    })
     if (!this.apiLoaded) {
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
@@ -37,16 +31,16 @@ export class WatchPageComponent implements OnInit {
 
   fetchSeriesData() {
     this.seasons$ = this.videoService.fetchPlaylistsFromYT().pipe(
-      map(({ data }) => this.mapSeasonData(data)),
-      tap((seasons) => {
+      map(({ data }) => this.mapSeasonData(data.items)),
+      map((seasons: Season[]) => {
         seasons.pop();
-        this.seasons.set(seasons);
+        return seasons;
       }),
     );
   }
 
-  mapSeasonData(data: any): Season[] {
-    return data.items.map((i: any) => {
+  mapSeasonData(seasons): Season[] {
+    return seasons.map((i: any) => {
       return {
         id: i.id,
         title: i.snippet.title,
@@ -59,7 +53,6 @@ export class WatchPageComponent implements OnInit {
   fetchEpisodeData(id: string): void {
       this.episodes$ = this.videoService.fetchPlaylistItemsFromYT(id).pipe(
         map(response => this.mapEpisodeData(response)),
-        tap((episodes) => this.episodes = episodes)
       )
   }
 
@@ -74,12 +67,21 @@ export class WatchPageComponent implements OnInit {
     })
   }
 
-  fetchEpisodeToWatch(videoId: string): void {
-    const episode = this.episodes.find(e => e.videoId === videoId);
-    if (episode) {
-      this.currentEpisode$ = of(episode.videoId);
-      this.currentEpisode = episode.videoId;
-    }
+  setCurrentEpisode(videoId: string) {
+    this.currentEpisode$ = this.episodes$.pipe(
+      map((episodes) => {
+        const episode = episodes.find(e => e.videoId === videoId) as Episode;
+        return episode.videoId;
+      }),
+      catchError((err) => {
+        return throwError(() => new Error(err))
+      }),
+    )
+    // const episode = this.episodes.find(e => e.videoId === videoId);
+    // if (episode) {
+    //   this.currentEpisode$ = of(episode.videoId);
+    //   this.currentEpisode = episode.videoId;
+    // }
   }
 
   // mapCurrentEpisodeData(response: AxiosResponse): CurrentEpisode {
