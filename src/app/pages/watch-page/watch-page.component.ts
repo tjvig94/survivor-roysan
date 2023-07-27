@@ -1,4 +1,5 @@
 import { Component, NO_ERRORS_SCHEMA, OnInit, signal, Signal, WritableSignal } from '@angular/core';
+import { AxiosResponse } from 'axios';
 import { tap, Observable, map, of } from 'rxjs';
 import { Season, Episode } from 'src/app/definitions/playlist-data.interface';
 import { VideoService } from 'src/app/services/video-service/video.service';
@@ -37,39 +38,32 @@ export class WatchPageComponent implements OnInit {
 
   fetchSeriesData() {
     this.seasons$ = this.videoService.fetchPlaylistsFromYT().pipe(
-      map(({ data }) => this.mapSeasonData(data)),
-      tap((seasons) => {
-        return seasons.pop();
-      }),
-    // return this.videoService.fetchPlaylistsFromYT().pipe(
-    //   map(({ data }) => this.mapSeasonData(data)),
-    //   tap((seasons) => {
-    //     seasons.pop();
-    //     this.seasons.set(seasons);
-    //   }),
+      map((response) => this.filterPrivateSeasons(response)),
+      map((seasons) => this.mapSeasonData(seasons)),
     );
   }
 
-  mapSeasonData(data: any): Season[] {
-    return data.items.map((i: any) => {
+  mapSeasonData(seasons): Season[] {
+    return seasons.map((season: any) => {
       return {
-        id: i.id,
-        title: i.snippet.title,
-        description: i.snippet.description,
-        thumbnail: i.snippet.thumbnails.standard,
+        id: season.id,
+        title: season.snippet.title,
+        description: season.snippet.description,
+        thumbnail: season.snippet.thumbnails.standard,
       }
     })
   }
 
   fetchEpisodeData(id: string): void {
       this.episodes$ = this.videoService.fetchPlaylistItemsFromYT(id).pipe(
-        map(response => this.mapEpisodeData(response)),
-        tap((episodes) => this.episodes = episodes)
+        map(response => this.filterPrivateVideos(response)),
+        map(videos => this.mapEpisodeData(videos)),
+        tap((episodes) => this.episodes = episodes),
       )
   }
 
-  mapEpisodeData(response: any): Episode[] {
-    return response.data.items.map((video: any) => {
+  mapEpisodeData(videos): Episode[] {
+    return videos.map((video: any) => {
       return {
         title: video.snippet.title,
         description: video.snippet.description,
@@ -77,6 +71,18 @@ export class WatchPageComponent implements OnInit {
         thumbnail: video.snippet.thumbnails.standard,
       }
     })
+  }
+
+  filterPrivateSeasons(response: AxiosResponse) {
+    const wantedSeasons = [
+      "Survivor Merrimack Madness",
+      "Survivor Roysan Revival"
+    ]
+    return response.data.items.filter(season => wantedSeasons.includes(season.snippet.title))
+  }
+
+  filterPrivateVideos(response: AxiosResponse) {
+    return response.data.items.filter(video => video.snippet.title !== "Private video");
   }
 
   fetchEpisodeToWatch(videoId: string): void {
